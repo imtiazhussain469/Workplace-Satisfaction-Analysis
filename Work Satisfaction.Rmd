@@ -1,0 +1,170 @@
+---
+title: "Work Satisfaction"
+output: pdf_document
+date: "2023-02-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# Loading the required libraries to read data and plot correlation
+library(readxl)
+library(corrplot)
+# Reading data using read excel function from sheet Results and skipping first 
+# row while reading the data.
+data <- read_excel("Workplace Satisfaction Survey - Copy.xlsx", 
+                   sheet = "Results", 
+                   skip = 1)
+```
+
+
+## Data Preprocesing checks:
+
+```{r}
+# Renaming columns to have shorter names. Longer names create confusions
+colnames(data) <- c("Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10","Q11",
+                    "Q12","Q13","Q14","Q15","Q16","Q17","Q18","Q19","Q20","Q21",
+                    "Q22","Q23","Q24","Q25","Q26","Q27","Q28","Q29","Q30","Q31",
+                    "Q32","Q33","Q34","Q35","Q36","Q37","Q38","Q39","Q40")
+
+# Checking top 6 rows after renaming the columns of dataframe.
+head(data)
+```
+
+
+```{r}
+# Checking data for missing values in each column.
+colSums(is.na(data))
+```
+
+```{r}
+# Checking for garbage values. Sometimes, we have two categories differently 
+# spelled which has same meaning.
+summary(data)
+```
+
+## The overall correlation table of dataset:
+
+The correlation plot attached below shows us that we have  mix of positive and negative correlations of all questions with respect to the target question of overall satisfaction. However, the correlations are weak in this case and we cannot spot any strong correlation in this case.
+
+```{r}
+# Plotting the correlation plot.
+corrplot(cor(data))
+```
+
+
+The reason for checking the effect of each category individually on the overall satisfaction is having a very small sample of data. The number of questions / coefficients (40) are larger than the number of samples (21). Hence, checking the effect at once is not possible. We have checked the effect of each category one by one.
+
+## Effect of Company Engagement on Overall Satisfaction:
+
+A linear model is created to check the effect of company engagement on overall satisfaction. The output is attached below and we can see that none of the three questions being asked for company engagement has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the three questions has no effect on the overall satisfaction or company's engagement has no effect on the overall satisfaction.
+
+```{r}
+# Fitting linear model with Q1 as the dependent variable and Q2, Q3 and Q4 as 
+# independent variables
+model_companyEngagement <- lm(Q1 ~ Q2 + Q3 + Q4,
+               data = data)
+
+# Printing summary of model.
+summary(model_companyEngagement)
+
+# NOTE: Same description is for all other chunks below.
+```
+
+## Effect of Nature of Job on Overall Satisfaction:
+
+A second linear model is created to check the effect of nature of job on overall satisfaction. The output is attached below and we can see that none of the six questions being asked for nature of job has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the six questions has no effect on the overall satisfaction or nature of job has no effect on the overall satisfaction.
+
+```{r}
+model_natureJOb <- lm(Q1 ~ Q5 + Q6 + Q7 + Q8 + Q9 + Q10,
+               data = data)
+summary(model_natureJOb)
+```
+
+
+## Effect of Work Life Balance on Overall Satisfaction:
+
+A third linear model is created to check the effect of work life balance on overall satisfaction. The output is attached below and we can see that none of the two questions being asked for work life balance has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the two questions has no effect on the overall satisfaction or work life balance has no effect on the overall satisfaction.
+
+```{r}
+model_workLife <- lm(Q1 ~ Q11 + Q12,
+               data = data)
+summary(model_workLife)
+```
+
+## Effect of Manager & Me on Overall Satisfaction:
+
+Another linear model is created to check the effect of Manager & Me relationship on overall satisfaction. The output is attached below and we can see that none of the seven questions being asked for manager and me relationship has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the seven questions has no effect on the overall satisfaction or manager and me relationship has no effect on the overall satisfaction.
+
+```{r}
+model_ManagerMe <- lm(Q1 ~ Q13 + Q14 + Q15 + Q16 + Q17 + Q18 + Q19,
+               data = data)
+summary(model_ManagerMe)
+```
+
+## Effect of Team on Overall Satisfaction:
+
+Another linear model is created to check the effect of team on overall satisfaction. The output is attached below and we can see that none of the three questions being asked for company engagement has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the three questions has no effect on the overall satisfaction or team questions has no effect on the overall satisfaction.
+
+```{r}
+model_Team <- lm(Q1 ~ Q20 + Q21 + Q22,
+               data = data)
+summary(model_Team)
+```
+
+## Effect of Team Collaboration on Overall Satisfaction:
+
+Another linear model is created to check the effect of team collaboration on overall satisfaction. The output is attached below and we can see that none of the two questions being asked for company engagement has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the two questions has no effect on the overall satisfaction or team collaboration has no effect on the overall satisfaction.
+
+```{r}
+model_teamColab <- lm(Q1 ~ Q23 + Q24,
+               data = data)
+summary(model_teamColab)
+```
+
+## Effect of Development & Promotion on Overall Satisfaction:
+
+Another linear model is created to check the effect of development and promotion on overall satisfaction. The output is attached below and we can see that only one of the five questions being asked for development and promotion has p value below significance level alpha = 0.05, hence that is statistically significant. The significant predictor is Q28 which is "I have the opportunity to be promoted at company". Hence we can say that it has positive effect on the overall satisfaction. This means that with one unit increase in opportunity of being promoted increases the overall satisfaction score by 0.4576 units. The R Square in this case is 52.98%.
+
+
+```{r}
+model_devPromotion <- lm(Q1 ~ Q25 + Q26 + Q27 + Q28 + Q29,
+               data = data)
+summary(model_devPromotion)
+```
+
+## Effect of Management on Overall Satisfaction:
+
+Another linear model is created to check the effect of management on overall satisfaction. The output is attached below and we can see that none of the four questions being asked for management has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the four questions has no effect on the overall satisfaction or management questions has no effect on the overall satisfaction.
+
+
+```{r}
+model_Management <- lm(Q1 ~ Q30 + Q31 + Q32 + Q33,
+               data = data)
+summary(model_Management)
+```
+
+## Effect of Connection to Company's Goal on Overall Satisfaction:
+
+Another linear model is created to check the effect of connection to company goals on overall satisfaction. The output is attached below and we can see that none of the four questions being asked for connection to company's goals has p value below significance level alpha = 0.05, hence they are statistically insignificant. Hence, we can say that all the two questions has no effect on the overall satisfaction or connection to company's goals has no effect on the overall satisfaction.
+
+
+```{r}
+model_CompanyGoal <- lm(Q1 ~ Q34 + Q35 + Q36 + Q37,
+               data = data)
+summary(model_CompanyGoal)
+```
+
+## Effect of Employment Conditions on Overall Satisfaction:
+
+Finally, the last linear model is created to check the effect of employment conditions on overall satisfaction. The output is attached below and we can see that Q40 has a p value below significance level alpha = 0.05, hence Q40 is statistically significant in this case. Q40 in this case is "My personal workstation is comfortable and pleasant". Thus having a personal workstation improves the overall satisfaction. With one unit increase in having a personal workstation value, the overall satisfaction increases by 0.396 uinits approximately. The R square value in this case is 30.41%.
+
+
+```{r}
+model_empConditions <- lm(Q1 ~ Q38 + Q39 + Q40,
+               data = data)
+summary(model_empConditions)
+```
+
